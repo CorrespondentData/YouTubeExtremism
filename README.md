@@ -29,3 +29,5 @@ Exploring extremism on YouTube
 - Network analysis
   - Channel network
   - User network
+
+# Project discussion on Slack channel
