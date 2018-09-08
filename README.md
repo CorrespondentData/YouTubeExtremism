@@ -2,7 +2,7 @@
 Exploring extremism on YouTube collaboration methods to ensure open and reproducible data research.
 
 ## For each working group please create your own folder on the master branch where to place your scripts
-- Please use a descriptive folder name e.g. left data scraping, topic modeling, etc.
+- Please use a descriptive folder name e.g. data gathering, topic modeling, etc.
 - Please add a readme to the folder where you describe:
   - Your team members and contact information
   - Your approach; specifying which data you used as input, how you processed it (with link to script adn what frameworks are used), what your output data is and a link to where it is saved in the GDrive.
