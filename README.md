@@ -44,4 +44,4 @@ Exploring extremism on YouTube team results and methods.
 Let's standardise how and where we save data. To ensure plaftorm and technology interoperability the proposal is to save all results as CSV files with the first row having column IDs. In your readme you can add additional information describig the columns.
 
 # Project discussion on Slack channel
-https://correspondentex.slack.com
+[https://correspondentex.slack.com](https://correspondentex.slack.com)
