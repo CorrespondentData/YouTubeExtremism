@@ -1,5 +1,5 @@
-# YouTube Extremism project
-Exploring extremism on YouTube
+# De Correspondent YouTube Extremism project
+Exploring extremism on YouTube.
 
 ## For each working group please create your own folder on the master branch where to place your scripts
 - Please use a descriptive folder name e.g. left data scraping, topic modeling, etc.
