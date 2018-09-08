@@ -34,8 +34,8 @@ Exploring extremism on YouTube collaboration methods to ensure open and reproduc
   - Channel network
   - User network
 
-- Temporal change (do we see differences November 2017 and August 2018?
-  - Topic prevalence
+- Temporal change (do we see differences November 2017 and August 2018?)
+  - Topic prevalence; can we see YouTube has removed extreme content?
   - Cluster membership
   - Classification
   - 
