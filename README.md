@@ -36,6 +36,8 @@ Exploring extremism on YouTube team results and methods.
 
 - Temporal change (do we see differences November 2017 and August 2018?
   - Topic prevalence
+  - Cluster membership
+  - Classification
   - 
   
 ## Data storage
