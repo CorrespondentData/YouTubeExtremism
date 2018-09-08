@@ -1,5 +1,5 @@
 # De Correspondent YouTube Extremism project
-Exploring extremism on YouTube team results and methods.
+Exploring extremism on YouTube collaboration methods to ensure open and reproducible data research.
 
 ## For each working group please create your own folder on the master branch where to place your scripts
 - Please use a descriptive folder name e.g. left data scraping, topic modeling, etc.
@@ -40,8 +40,10 @@ Exploring extremism on YouTube team results and methods.
   - Classification
   - 
   
-## Data storage
+## Data storage standardisation
 Let's standardise how and where we save data. To ensure plaftorm and technology interoperability the proposal is to save all results as CSV files with the first row having column IDs. In your readme you can add additional information describing the columns.
+Temporary solutions is to dave your results as CSV on GDrive. Please create direct links from GitHub readme and scripts to the file to save browsing time.
+We are exploring http://data.world as next solution; it allows you to connect through API to read and write results there.
 
 # Project discussion on Slack channel
 [https://correspondentex.slack.com](https://correspondentex.slack.com)
