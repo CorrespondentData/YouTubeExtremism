@@ -5,7 +5,7 @@ Exploring extremism on YouTube
 - Please use a descriptive folder name e.g. left data scraping, topic modeling, etc.
 - Please add a readme to the folder where you describe your team, contact information and your approach. You may create a branch for your subfolder to work on, so you do not have to synchornize alls folders and scripts.
 
-## Proposed high level overview
+## Proposed high folder overview
 
 - Data gathering
   - Leftist data scraping
