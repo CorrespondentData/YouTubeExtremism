@@ -11,30 +11,35 @@ Exploring extremism on YouTube.
 ## Proposed high folder overview
 
 - Data gathering
-  - Leftist data
-  - Rightist data
+  - Video data (metadata, transcript, comments)
+  - Channel data (videos with their data)
+  - User data (subscriptions, videos likes)
   
-- Topic mapping
+- Topic mapping (can we identify what topics are prevalent in entities?)
   - Channel topic mapping
   - User topic mapping
   - Video topic mapping
   
-- Clustering
+- Clustering (can we identify entities that cluster around certain features?)
   - Channel clustering
   - User clustering
   - Video clustering
   
-- Classification
+- Classification (can we classify entities to show similarities with certain topics?)
   - Channel classification
   - User classification
   - Video classification
   
-- Network analysis
+- Network analysis (can we identify cliques of channels or users isolated around certain topics?)
   - Channel network
   - User network
 
+- Temporal change (do we see differences November 2017 and August 2018?
+  - Topic prevalence
+  - 
+  
 ## Data storage
-
-
+Let's standardise how and where we save data. To ensure plaftorm and technology interoperability the proposal is to save all results as CSV files with the first row having column IDs. In your readme you can add additional information describig the columns.
 
 # Project discussion on Slack channel
+https://correspondentex.slack.com
