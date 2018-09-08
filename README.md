@@ -21,11 +21,11 @@ Exploring extremism on YouTube
   - User clustering
   - Video clustering
   
- - Classification
+- Classification
   - Channel classification
   - User classification
   - Video classification
   
- - Network analysis
+- Network analysis
   - Channel network
   - User network
