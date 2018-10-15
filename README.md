@@ -33,12 +33,6 @@ Exploring extremism on YouTube collaboration methods to ensure open and reproduc
 - Network analysis (can we identify cliques of channels or users isolated around certain topics?)
   - Channel network
   - User network
-
-- Temporal change (do we see differences November 2017 and August 2018?)
-  - Topic prevalence; can we see YouTube has removed extreme content?
-  - Cluster membership
-  - Classification
-  - 
   
 ## Data storage standardisation
 - Let's standardise how and where we save data. To ensure plaftorm and technology interoperability the proposal is to save all results as CSV files with the first row having column IDs.
