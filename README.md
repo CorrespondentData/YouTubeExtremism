@@ -41,4 +41,5 @@ Exploring extremism on YouTube collaboration methods to ensure open and reproduc
 - We are exploring http://data.world as next solution; it allows you to connect through API to read and write results there.
 
 # Project discussion on Slack channel
-[https://correspondentex.slack.com](https://correspondentex.slack.com)
+[https://youtube-rabbit-hole.slack.com/]
+
