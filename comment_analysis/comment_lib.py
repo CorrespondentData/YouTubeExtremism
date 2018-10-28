@@ -6,7 +6,9 @@ COMMENT_TEXT_FIELDS = ['video_id', 'comment_id', 'author_display_name',
 VIDEO_TEXT_FIELDS = ['channel_id', 'video_title', 'video_description',
        'video_channel_title', 'video_default_language', 'video_duration']
 
-def read_comments(comments_file, convert_string = True):
+VIDEO_NUMERIC_FIELDS = ['video_view_count', 'video_comment_count', 'video_likes_count', 'video_dislikes_count']
+
+def read_comments(comments_file, convert_string = True, convert_numeric = True):
     '''
     Read comments file into Pandas DataFrame.
 
@@ -14,11 +16,15 @@ def read_comments(comments_file, convert_string = True):
     comments_file - filename of comments csv file
     convert_string - boolean. Force conversion of string fields to strings (e.g. comments containing only numbers). 
         Defaults to True
+    convert_numeric - boolean. Force conversion to numeric for numeric fields. Defaults to True
     '''
     comments_df = pd.read_csv(comments_file, encoding = 'utf8', header = 0)
     comments_df = comments_df[comments_df['video_id'] != 'video_id']
 
     comments_df['comment_time'] = pd.to_datetime(comments_df['comment_time'])
+
+    if convert_numeric:
+        comments_df['comment_like_count'] = pd.to_numeric(comments_df['comment_like_count'])
 
     if convert_string:
         for field in COMMENT_TEXT_FIELDS:
@@ -26,7 +32,7 @@ def read_comments(comments_file, convert_string = True):
 
     return comments_df
 
-def add_video_metadata(comments_df, video_file, keep_vars = None, convert_string = True):
+def add_video_metadata(comments_df, video_file, keep_vars = None, convert_string = True, convert_numeric = True):
     '''
     Add video metadata to the comments dataset
 
@@ -37,6 +43,7 @@ def add_video_metadata(comments_df, video_file, keep_vars = None, convert_string
         video_id is always kept to match, does not necessarily need to be specified here.
     convert_string - boolean. Force conversion of string fields to strings (e.g. comments containing only numbers). 
         Defaults to True
+    convert_numeric - boolean. Force conversion to numeric for numeric fields. Defaults to True
     '''
     video_df = pd.read_csv(video_file, encoding = 'utf8', header = 0)
     video_df = video_df[video_df['video_id'] != 'video_id']
@@ -44,6 +51,9 @@ def add_video_metadata(comments_df, video_file, keep_vars = None, convert_string
     if convert_string:
         for field in VIDEO_TEXT_FIELDS:
             video_df[field] = video_df[field].apply(str)
+    if convert_numeric:
+        for field in VIDEO_NUMERIC_FIELDS:
+            video_df[field] = pd.to_numeric(video_df[field], errors = 'coerce')
 
     video_df['video_published'] = pd.to_datetime(video_df['video_published'])
     
