@@ -18,7 +18,6 @@ def _get_recommendations_header():
 
 def get_recommendations(video_id, youtube_client, max_results=50):
     return youtube_client.search().list(
-        # videoId = video_id,
         part='snippet',
         type='video',
         relatedToVideoId=video_id,
