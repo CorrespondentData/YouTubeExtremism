@@ -1,150 +1,80 @@
 import csv
-from googleapiclient.discovery import build
+from collections import namedtuple as _namedtuple
+
+from .util import is_empty_file as _is_empty_file
+from .util import convert_to_dictionary as _convert_to_dictionary
+
+video = _namedtuple("video", ('video_published',
+                              'video_id',
+                              'channel_id',
+                              'video_title',
+                              'video_description',
+                              'channel_title',
+                              'video_category_id',
+                              'video_tags',
+                              'video_duration',
+                              'video_view_count',
+                              'video_comment_count',
+                              'video_likes_count',
+                              'video_dislikes_count',
+                              'video_topic_ids',
+                              'video_topic_categories'))
 
 
-def get_videos(channel, YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, DEVELOPER_KEY):
-    '''Takes a channel_id and finds
-    the first 50 videos'''
-    youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
-                    developerKey=DEVELOPER_KEY)
+def _get_video_header():
+    return video._fields
 
-    response = youtube.search().list(
+
+def get_videos(channel, youtube_client, max_results=50, next_page_token=None):
+    return youtube_client.search().list(
         channelId=channel,
         type='video',
         part='snippet',
-        maxResults=50,
+        maxResults=max_results,
+        pageToken=next_page_token
     ).execute()
-    print('getting videos for ' + channel)
-    return response
 
 
-def get_more_videos(channel, YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, DEVELOPER_KEY, nextPageToken):
-    '''Takes a channel_id and looks for
-    the next page in the result list.'''
-    youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
-                    developerKey=DEVELOPER_KEY)
-
-    response = youtube.search().list(
-        channelId=channel,
-        type='video',
-        part='snippet',
-        maxResults=50,
-        pageToken=nextPageToken
-    ).execute()
-    print('getting more pages of ' + channel)
-
-    return response
-
-
-def get_video_metadata(video_id, YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, DEVELOPER_KEY):
-    '''Takes a video_id and gets
-    the associated metadata'''
-
-    youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
-                    developerKey=DEVELOPER_KEY)
-
-    response = youtube.videos().list(
+def _get_video_metadata(video_id, youtube_client):
+    return youtube_client.videos().list(
         part='snippet,contentDetails,statistics',
         id=video_id
     ).execute()
 
-    return response
+
+def convert_to_videos(response):
+    videos = list()
+    for data in response['items']:
+        video_id = data['id']['videoId']
+        video_metadata = _get_video_metadata(video_id)
+        metadata = video_metadata['items'][0]
+
+        next_video = video(video_published=data['snippet']['publishedAt'],
+                           video_id=video_id,
+                           channel_id=data['snippet']['channelId'],
+                           video_title=data['snippet']['title'],
+                           video_description=data['snippet']['description'],
+                           channel_title=data['snippet']['channelTitle'],
+                           video_category_id=metadata['snippet'].get('categoryId', 'not set'),
+                           video_duration=metadata['contentDetails']['duration'],
+                           video_view_count=metadata['statistics']['viewCount'],
+                           video_comment_count=metadata['statistics'].get('commentCount', 0),
+                           video_likes_count=metadata['statistics'].get('likeCount', 0),
+                           video_tags=metadata['snippet'].get('tags', 'not set'),
+                           video_dislikes_count=metadata['statistics'].get('dislikeCount', 0),
+                           video_topic_ids=metadata['topicDetails'].get('topicIds', "not set"),
+                           video_topic_categories=metadata['topicDetails'].get('topicCategories', "not set")
+                           )
+        videos.append(next_video)
+
+    return videos
 
 
-def write_video_data_to_file(response, video_file):
-    '''Write the video data to a file'''
+def write_video_data_to_file(videos, video_file):
+    with open(video_file, "a") as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=_get_video_header())
+        if _is_empty_file(video_file):
+            writer.writeheader()
 
-    with open(video_file, "a") as csvFile:
-        fieldnames = ['video_published',
-                      'video_id',
-                      'channel_id',
-                      'video_title',
-                      'video_description',
-                      'channel_title',
-                      'video_category_id',
-                      'video_tags',
-                      'video_duration',
-                      'video_view_count',
-                      'video_comment_count',
-                      'video_likes_count',
-                      'video_dislikes_count',
-                      'video_topic_ids',
-                      'video_topic_categories'
-                      ]
-
-        writer = csv.DictWriter(csvFile, fieldnames=fieldnames)
-        writer.writeheader()
-
-        for video in response['items']:
-
-            video_published = video['snippet']['publishedAt']
-            video_id = video['id']['videoId']
-            channel_id = video['snippet']['channelId']
-            video_title = video['snippet']['title']
-            video_description = video['snippet']['description']
-            channel_title = video['snippet']['channelTitle']
-            try:
-                video_category_id = video['snippet']['categoryId']
-            except:
-                video_category_id = 'not set'
-            try:
-                video_tags = video['snippet']['tags']
-            except:
-                video_tags = 'not set'
-
-            video_metadata = get_video_metadata(video_id)
-
-            for metadata in video_metadata['items']:
-                print('getting metadata for ' + video_title)
-
-                video_duration = metadata['contentDetails']['duration']
-                video_view_count = metadata['statistics']['viewCount']
-                try:
-                    video_comment_count = metadata['statistics']['commentCount']
-                except:
-                    video_comment_count = 0
-
-                try:
-                    video_likes_count = metadata['statistics']['likeCount']
-                except:
-                    video_likes_count = 0
-
-                try:
-                    video_dislikes_count = metadata['statistics']['dislikeCount']
-                except:
-                    video_dislikes_count = 0
-
-                try:
-                    video_topic_ids = metadata['topicDetails']['topicIds']
-                except:
-                    video_topic_ids = 'not set'
-                try:
-                    video_topic_categories = metadata['topicDetails']['topicCategories']
-                except:
-                    video_topic_categories = 'not set'
-                try:
-                    video_category_id = metadata['snippet']['categoryId']
-                except:
-                    video_category_id = 'not set'
-                try:
-                    video_tags = metadata['snippet']['tags']
-                except:
-                    video_tags = 'not set'
-
-                writer.writerow({'video_published': video_published,
-                                 'video_id': video_id,
-                                 'channel_id': channel_id,
-                                 'video_title': video_title,
-                                 'video_description': video_description,
-                                 'channel_title': channel_title,
-                                 'video_category_id': video_category_id,
-                                 'video_tags': video_tags,
-                                 'video_duration': video_duration,
-                                 'video_view_count': video_view_count,
-                                 'video_comment_count': video_comment_count,
-                                 'video_likes_count': video_likes_count,
-                                 'video_dislikes_count': video_dislikes_count,
-                                 'video_topic_ids': video_topic_ids,
-                                 'video_topic_categories': video_topic_categories
-                                 })
-    return response
+        for video_row in videos:
+            writer.writerow(_convert_to_dictionary(video_row))
