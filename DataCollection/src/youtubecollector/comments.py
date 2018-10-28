@@ -1,5 +1,8 @@
-import csv
+import csv as _csv
 from collections import namedtuple as _namedtuple
+
+from googleapiclient.errors import HttpError
+
 from .util import is_empty_file as _is_empty_file
 from .util import convert_to_dictionary as _convert_to_dictionary
 
@@ -20,14 +23,20 @@ def _get_comment_header():
 
 
 def get_comments(video_id, youtube_client, next_page_token=None):
-    return youtube_client.commentThreads().list(
-        videoId=video_id,
-        part='snippet,replies',
-        pageToken=next_page_token
-    ).execute()
+    try:
+        return youtube_client.commentThreads().list(
+            videoId=video_id,
+            part='snippet,replies',
+            pageToken=next_page_token
+        ).execute()
+    except HttpError:
+        return
 
 
 def convert_to_comments(response):
+    if response is None:
+        return list()
+
     comments = list()
     for data in response['items']:
         comments.append(comment(comment_id=data['id'],
@@ -64,7 +73,7 @@ def convert_to_comments(response):
 
 def write_comments(comments_file, comments):
     with open(comments_file, 'a') as csv_file:
-        writer = csv.DictWriter(csv_file, fieldnames=_get_comment_header())
+        writer = _csv.DictWriter(csv_file, fieldnames=_get_comment_header())
         if _is_empty_file(comments_file):
             writer.writeheader()
 

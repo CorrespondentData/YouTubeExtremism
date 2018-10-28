@@ -1,4 +1,4 @@
-import csv
+import csv as _csv
 from collections import namedtuple as _namedtuple
 
 from .util import is_empty_file as _is_empty_file
@@ -25,9 +25,9 @@ def _get_video_header():
     return video._fields
 
 
-def get_videos(channel, youtube_client, max_results=50, next_page_token=None):
+def get_videos(channel_id, youtube_client, max_results=50, next_page_token=None):
     return youtube_client.search().list(
-        channelId=channel,
+        channelId=channel_id,
         type='video',
         part='snippet',
         maxResults=max_results,
@@ -42,11 +42,25 @@ def _get_video_metadata(video_id, youtube_client):
     ).execute()
 
 
-def convert_to_videos(response):
+def _get_topic_ids(metadata):
+    if "topicDetails" in metadata:
+        return metadata['topicDetails'].get('topicIds', "not set")
+    else:
+        return "not set"
+
+
+def _get_topic_categories(metadata):
+    if "topicDetails" in metadata:
+        return metadata['topicDetails'].get('topicCategories', "not set")
+    else:
+        return "not set"
+
+
+def convert_to_videos(response, youtube_client):
     videos = list()
     for data in response['items']:
         video_id = data['id']['videoId']
-        video_metadata = _get_video_metadata(video_id)
+        video_metadata = _get_video_metadata(video_id, youtube_client)
         metadata = video_metadata['items'][0]
 
         next_video = video(video_published=data['snippet']['publishedAt'],
@@ -62,17 +76,17 @@ def convert_to_videos(response):
                            video_likes_count=metadata['statistics'].get('likeCount', 0),
                            video_tags=metadata['snippet'].get('tags', 'not set'),
                            video_dislikes_count=metadata['statistics'].get('dislikeCount', 0),
-                           video_topic_ids=metadata['topicDetails'].get('topicIds', "not set"),
-                           video_topic_categories=metadata['topicDetails'].get('topicCategories', "not set")
+                           video_topic_ids=_get_topic_ids(metadata),
+                           video_topic_categories=_get_topic_categories(metadata)
                            )
         videos.append(next_video)
 
     return videos
 
 
-def write_video_data_to_file(videos, video_file):
+def write_videos(videos, video_file):
     with open(video_file, "a") as csv_file:
-        writer = csv.DictWriter(csv_file, fieldnames=_get_video_header())
+        writer = _csv.DictWriter(csv_file, fieldnames=_get_video_header())
         if _is_empty_file(video_file):
             writer.writeheader()
 

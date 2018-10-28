@@ -1,6 +1,7 @@
-import csv
+import csv as _csv
 from collections import namedtuple as _namedtuple
-from .util import is_empty_file as _is_empty_file, convert_to_dictionary
+from .util import is_empty_file as _is_empty_file
+from .util import convert_to_dictionary as _convert_to_dictionary
 
 channel = _namedtuple("channel", ('channel_id',
                                   'channel_title',
@@ -29,7 +30,7 @@ def _get_channel(channel_id, youtube_client):
     ).execute()
 
 
-def convert_to_channel(response) -> channel:
+def _convert_to_channel(response) -> channel:
     """Extracts the needed variables from the returned json"""
     response_channel = response['items'][0]
     return channel(channel_id=response_channel['id'],
@@ -51,7 +52,7 @@ def get_channels(channel_seeds, youtube_client):
     channels = list()
     for channel_id in channel_seeds['Id']:
         response = _get_channel(channel_id, youtube_client)
-        next_channel = convert_to_channel(response)
+        next_channel = _convert_to_channel(response)
         channels.append(next_channel)
 
     return channels
@@ -59,9 +60,9 @@ def get_channels(channel_seeds, youtube_client):
 
 def write_channels(channels, channel_filename):
     with open(channel_filename, "a") as csv_file:
-        writer = csv.DictWriter(csv_file, fieldnames=_get_channel_header())
+        writer = _csv.DictWriter(csv_file, fieldnames=_get_channel_header())
         if _is_empty_file(channel_filename):
             writer.writeheader()
 
         for channel_row in channels:
-            writer.writerow(convert_to_dictionary(channel_row))
+            writer.writerow(_convert_to_dictionary(channel_row))

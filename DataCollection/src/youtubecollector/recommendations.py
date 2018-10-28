@@ -1,4 +1,4 @@
-import csv
+import csv as _csv
 from collections import namedtuple as _namedtuple
 
 from .util import is_empty_file as _is_empty_file
@@ -44,7 +44,7 @@ def write_recommendations(recommendations_file, recommendations):
     header = _get_recommendations_header()
 
     with open(recommendations_file, 'a') as csv_file:
-        writer = csv.DictWriter(csv_file, fieldnames=header)
+        writer = _csv.DictWriter(csv_file, fieldnames=header)
 
         if _is_empty_file(recommendations_file):
             writer.writeheader()
