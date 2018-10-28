@@ -11,7 +11,8 @@ comment = _namedtuple("comment", ('video_id',
                                   'comment_text',
                                   'comment_like_count',
                                   'comment_dislike_count',
-                                  'comment_time'))
+                                  'comment_time',
+                                  'reply_count'))
 
 
 def _get_comment_header():
@@ -38,8 +39,26 @@ def convert_to_comments(response):
                                 comment_text=data['snippet']['topLevelComment']['snippet']['textDisplay'],
                                 comment_like_count=data['snippet']['topLevelComment']['snippet']['likeCount'],
                                 comment_dislike_count=data['snippet']['topLevelComment']['snippet']['disLikeCount'],
-                                comment_time=data['snippet']['topLevelComment']['snippet']['publishedAt'])
+                                comment_time=data['snippet']['topLevelComment']['snippet']['publishedAt'],
+                                reply_count=data['snippet']['totalReplyCount'])
                         )
+        if 'replies' in data:
+            for reply in data['replies']['comments']:
+                #Replies kunnen worden herkend aan de id:
+                # De id is opgebouwd uit twee elementen. {parent_comment_id}.{reply_id}
+                # TODO[Olaf]: Is het zinnig om een identifier voor replies mee te geven?
+
+                comments.append(comment(comment_id=reply['id'],
+                                        video_id=reply['snippet']['videoId'],
+                                        author_display_name=reply['snippet']['authorDisplayName'],
+                                        author_channel_url=reply['snippet']['authorChannelUrl'],
+                                        author_channel_id=reply['snippet']['authorChannelId']['value'],
+                                        comment_text=reply['snippet']['textDisplay'],
+                                        comment_like_count=reply['snippet']['likeCount'],
+                                        comment_dislike_count='',
+                                        comment_time=reply['snippet']['publishedAt'],
+                                        reply_count=''))
+
     return comments
 
 
