@@ -19,21 +19,22 @@ video = _namedtuple('video', ('video_id',
                               'video_likes_count',
                               'video_dislikes_count',
                               'video_topic_ids',
-                              'video_topic_categories'))
+                              'video_topic_categories'
+                             ))
 
 
 def _get_video_header():
     return video._fields
 
 
-def get_videos(channel_uploads, youtube_client, max_results=50, next_page_token=None):
+def get_videos(channel_uploads, youtube_client, max_results=50, nextPageToken=None):
     """takes the id of the uploads_playlist
     in channel data"""
     return youtube_client.playlistItems().list(
         part='snippet,contentDetails',
         playlistId=channel_uploads,
         maxResults=max_results,
-        pageToken=next_page_token
+        pageToken=nextPageToken
     ).execute()
 
 
@@ -46,7 +47,7 @@ def _get_video_metadata(video_id, youtube_client):
 
 def _get_topic_ids(metadata):
     if "topicDetails" in metadata:
-        return metadata['topicDetails'].get('topicIds', "not set")
+        return metadata['topicDetails'].get('relevantTopicIds', "not set")
     else:
         return "not set"
 
@@ -61,7 +62,7 @@ def _get_topic_categories(metadata):
 def convert_to_videos(response, youtube_client):
     videos = list()
     for data in response['items']:
-        video_id = data['id']['videoId']
+        video_id = data['contentDetails']['videoId']
         video_metadata = _get_video_metadata(video_id, youtube_client)
         metadata = video_metadata['items'][0]
 
@@ -69,13 +70,13 @@ def convert_to_videos(response, youtube_client):
                            video_published=data['snippet']['publishedAt'],
                            channel_id=data['snippet']['channelId'],
                            video_title=data['snippet']['title'],
-                           video_description=data['snippet']['description'],
+                           video_description=data['snippet'].get('description', 'not set'),
                            video_channel_title=data['snippet']['channelTitle'],
                            video_tags=metadata['snippet'].get('tags', 'not set'),
                            video_category_id=metadata['snippet'].get('categoryId', 'not set'),
                            video_default_language=metadata['snippet'].get('defaultLanguage', 'not set'),
                            video_duration=metadata['contentDetails']['duration'],
-                           video_view_count=metadata['statistics']['viewCount'],
+                           video_view_count=metadata['statistics'].get('viewcount', 0),
                            video_comment_count=metadata['statistics'].get('commentCount', 0),
                            video_likes_count=metadata['statistics'].get('likeCount', 0),
                            video_dislikes_count=metadata['statistics'].get('dislikeCount', 0),

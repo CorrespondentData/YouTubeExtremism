@@ -31,12 +31,12 @@ def _get_channel(channel_id, youtube_client):
     ).execute()
 
 
-def _get_channel_uploads(response_channel):
-    if 'contentDetails' in response_channel['snippet']:
-        return response_channel['snippet']['contentDetails']['relatedPlaylists'].get('uploads',
-                                                                          'no uploads'),
-    else:
-        return 'no uploads'
+#def _get_channel_uploads(response_channel):
+#    if 'contentDetails' in response_channel['snippet']:
+#        return response_channel['snippet']['contentDetails']['relatedPlaylists'].get('uploads',
+#                                                                          'no uploads'),
+#    else:
+#        return 'no uploads'
 
 
 def _convert_to_channel(response) -> channel:
@@ -47,7 +47,7 @@ def _convert_to_channel(response) -> channel:
                    channel_description=response_channel['snippet']['description'],
                    channel_default_language=response_channel['snippet'].get('defaultLanguage', 'not set'),
                    channel_country=response_channel['snippet'].get('country', 'not set'),
-                   channel_uploads=_get_channel_uploads(response_channel),
+                   channel_uploads=response_channel['contentDetails']['relatedPlaylists'].get('uploads', ''),
                    channel_viewcount=response_channel['statistics']['viewCount'],
                    channel_commentcount=response_channel['statistics']['commentCount'],
                    channel_subscribercount=response_channel['statistics']['subscriberCount'],
@@ -60,7 +60,7 @@ def _convert_to_channel(response) -> channel:
 
 def get_channels(channel_seeds, youtube_client):
     channels = list()
-    for channel_id in channel_seeds['Id']:
+    for channel_id in channel_seeds['channel_id']:
         response = _get_channel(channel_id, youtube_client)
         next_channel = _convert_to_channel(response)
         channels.append(next_channel)
