@@ -8,6 +8,7 @@ channel = _namedtuple("channel", ('channel_id',
                                   'channel_description',
                                   'channel_default_language',
                                   'channel_country',
+                                  'channel_uploads', # <-- deze is nieuw
                                   'channel_viewcount',
                                   'channel_commentcount',
                                   'channel_subscribercount',
@@ -38,6 +39,7 @@ def _convert_to_channel(response) -> channel:
                    channel_description=response_channel['snippet']['description'],
                    channel_default_language=response_channel['snippet'].get('defaultLanguage', 'not set'),
                    channel_country=response_channel['snippet'].get('country', 'not set'),
+                   channel_uploads = response_channel['snippet']['contentDetails']['relatedPlaylists'].get('uploads', 'no uploads'), #<-- en deze is dus nieuw
                    channel_viewcount=response_channel['statistics']['viewCount'],
                    channel_commentcount=response_channel['statistics']['commentCount'],
                    channel_subscribercount=response_channel['statistics']['subscriberCount'],
