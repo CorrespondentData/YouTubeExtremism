@@ -54,7 +54,7 @@ def get_more_videos(channel_uploads, youtube_client, max_results=50, next_page_t
 
 def _get_video_metadata(video_id, youtube_client):
     return youtube_client.videos().list(
-        part='snippet,contentDetails,statistics',
+        part='snippet,contentDetails,statistics,topicDetails',
         id=video_id
     ).execute()
 
