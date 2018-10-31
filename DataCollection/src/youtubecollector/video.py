@@ -20,22 +20,29 @@ video = _namedtuple('video', ('video_id',
                               'video_dislikes_count',
                               'video_topic_ids',
                               'video_topic_categories'
-                             ))
+                              ))
 
 
 def _get_video_header():
     return video._fields
 
 
-def get_videos(channel_uploads, youtube_client, max_results=50, nextPageToken=None):
+def get_videos(channel_uploads, youtube_client, max_results=50, next_page_token=None):
     """takes the id of the uploads_playlist
     in channel data"""
-    return youtube_client.playlistItems().list(
-        part='snippet,contentDetails',
-        playlistId=channel_uploads,
-        maxResults=max_results,
-        pageToken=nextPageToken
-    ).execute()
+    if next_page_token:
+        return youtube_client.playlistItems().list(
+            part='snippet,contentDetails',
+            playlistId=channel_uploads,
+            maxResults=max_results,
+            pageToken=next_page_token
+        ).execute()
+    else:
+        return youtube_client.playlistItems().list(
+            part='snippet,contentDetails',
+            playlistId=channel_uploads,
+            maxResults=max_results
+        ).execute()
 
 
 def _get_video_metadata(video_id, youtube_client):
@@ -76,7 +83,7 @@ def convert_to_videos(response, youtube_client):
                            video_category_id=metadata['snippet'].get('categoryId', 'not set'),
                            video_default_language=metadata['snippet'].get('defaultLanguage', 'not set'),
                            video_duration=metadata['contentDetails']['duration'],
-                           video_view_count=metadata['statistics'].get('viewcount', 0),
+                           video_view_count=metadata['statistics'].get('viewCount', 0),
                            video_comment_count=metadata['statistics'].get('commentCount', 0),
                            video_likes_count=metadata['statistics'].get('likeCount', 0),
                            video_dislikes_count=metadata['statistics'].get('dislikeCount', 0),

@@ -31,14 +31,6 @@ def _get_channel(channel_id, youtube_client):
     ).execute()
 
 
-#def _get_channel_uploads(response_channel):
-#    if 'contentDetails' in response_channel['snippet']:
-#        return response_channel['snippet']['contentDetails']['relatedPlaylists'].get('uploads',
-#                                                                          'no uploads'),
-#    else:
-#        return 'no uploads'
-
-
 def _convert_to_channel(response) -> channel:
     """Extracts the needed variables from the returned json"""
     response_channel = response['items'][0]
