@@ -26,22 +26,24 @@ video = _namedtuple('video', ('video_id',
 def _get_video_header():
     return video._fields
 
-
-def get_videos(channel_uploads, youtube_client, max_results=50, next_page_token=None):
+def get_more_videos(channel_uploads, youtube_client, next_page_token, max_results=None):
     """takes the id of the uploads_playlist
     in channel data"""
-    if next_page_token:
-        return youtube_client.playlistItems().list(
-            part='snippet,contentDetails',
-            playlistId=channel_uploads,
-            maxResults=max_results,
-        pageToken=next_page_token).execute()
-    else:
-        return youtube_client.playlistItems().list(
-            part='snippet,contentDetails',
-            playlistId=channel_uploads,
-            maxResults=max_results
-        ).execute()
+
+    return youtube_client.playlistItems().list(
+        part='snippet,contentDetails',
+        playlistId=channel_uploads,
+        maxResults=50,
+        pageToken=next_page_token
+    ).execute()
+
+def get_videos(channel_uploads, youtube_client, max_results=None):
+
+    return youtube_client.playlistItems().list(
+        part='snippet,contentDetails',
+        playlistId=channel_uploads,
+        maxResults=50
+    ).execute()
 
 def _get_video_metadata(video_id, youtube_client):
     return youtube_client.videos().list(

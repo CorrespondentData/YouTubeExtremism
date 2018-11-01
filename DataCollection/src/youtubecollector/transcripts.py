@@ -16,12 +16,16 @@ def get_captions(videos):
         'writeautomaticsub': True,
         'skip_download': True,
         'nocheckcertificate': True,
-        'verbose': False  # doesn't seem to work
+        'verbose': False # doesn't seem to work
+        
     }
     with _youtube_dl.YoutubeDL(ydl_opts) as ydl:
         for video in videos:
-            video_url = 'https://www.youtube.com/watch?v={}'.format(video.video_id)
-            ydl.download([video_url])
+            try:
+                video_url = 'https://www.youtube.com/watch?v={}'.format(video.video_id)
+                ydl.download([video_url])
+            except:
+                continue
 
 
 # TODO(OMeuwese) provide folder as argument and extract all vtt_files from given folder
@@ -59,26 +63,3 @@ def _get_ids_from_filename(filename):
     ids = _os.path.basename(filename)
     ids = ids[-18:-7]
     return ids
-
-
-# TODO (OMeuwese) Unclear how this will be used in getting started
-def get_language_and_translations(translate_client, videos_sample, lang):
-    trans = []
-    conf = []
-    target = 'en'
-
-    for text in videos_sample['videoDescription']:
-        translation = translate_client(text, target_language=target)
-        language = translate_client.detect_language(text)
-
-        language_result = language['language']
-        confidence_result = language['confidence']
-        translation_result = translation['translatedText']
-
-        lang.append(language_result)
-        conf.append(confidence_result)
-        trans.append(translation_result)
-
-    videos_sample['language_videoDescription'] = lang
-    videos_sample['language_videoDescription_confidence'] = conf
-    videos_sample['english_videoDescription'] = trans

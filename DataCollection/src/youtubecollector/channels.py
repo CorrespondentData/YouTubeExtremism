@@ -56,6 +56,7 @@ def get_channels(channel_seeds, youtube_client):
         response = _get_channel(channel_id, youtube_client)
         next_channel = _convert_to_channel(response)
         channels.append(next_channel)
+        print(channel_id)
 
     return channels
 
