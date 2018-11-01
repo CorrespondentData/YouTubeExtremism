@@ -4,12 +4,12 @@ from collections import namedtuple as _namedtuple
 from .util import is_empty_file as _is_empty_file
 from .util import convert_to_dictionary as _convert_to_dictionary
 
-recommendation = _namedtuple("recommendation", ('videoId',
-                                                'targetVideoId',
-                                                'publishedAt',
-                                                'channelId',
-                                                'title',
-                                                'description'))
+recommendation = _namedtuple("recommendation", ('video_id',
+                                                'target_video_id',
+                                                'published_at',
+                                                'channel_id',
+                                                'video_title',
+                                                'video_description'))
 
 
 def _get_recommendations_header():
@@ -28,12 +28,12 @@ def get_recommendations(video_id, youtube_client, max_results=50):
 def convert_to_recommendations(response, video_id):
     recommendations = list()
     for data in response['items']:
-        next_recommendation = recommendation(videoId=video_id,
-                                             targetVideoId=data['id']['videoId'],
-                                             publishedAt=data['snippet']['publishedAt'],
-                                             channelId=data['snippet']['channelId'],
-                                             title=data['snippet']['title'],
-                                             description=data['snippet']['description'])
+        next_recommendation = recommendation(video_id=video_id,
+                                             target_video_id=data['id']['videoId'],
+                                             published_at=data['snippet']['publishedAt'],
+                                             channel_id=data['snippet']['channelId'],
+                                             video_title=data['snippet']['title'],
+                                             video_description=data['snippet']['description'])
 
         recommendations.append(next_recommendation)
 

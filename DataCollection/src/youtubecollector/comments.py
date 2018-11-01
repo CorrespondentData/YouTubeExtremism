@@ -22,12 +22,23 @@ def _get_comment_header():
     return comment._fields
 
 
-def get_comments(video_id, youtube_client, next_page_token=None):
+def get_comments(video_id, youtube_client):
     try:
         return youtube_client.commentThreads().list(
             videoId=video_id,
             part='snippet,replies',
-            pageToken=next_page_token
+            maxResults=100
+        ).execute()
+    except HttpError:
+        return
+    
+def get_more_comments(video_id, youtube_client, next_page_token):
+    try:
+        return youtube_client.commentThreads().list(
+            videoId=video_id,
+            part='snippet,replies',
+            pageToken=next_page_token,
+            maxResults=100
         ).execute()
     except HttpError:
         return
@@ -43,11 +54,10 @@ def convert_to_comments(response):
                                 video_id=data['snippet']['videoId'],
                                 author_display_name=data['snippet']['topLevelComment']['snippet']['authorDisplayName'],
                                 author_channel_url=data['snippet']['topLevelComment']['snippet']['authorChannelUrl'],
-                                author_channel_id=data['snippetauthorChannelId']['topLevelComment']['snippet']
-                                ['authorChannelId']['value'],
+                                author_channel_id=data['snippet']['topLevelComment']['snippet']['authorChannelId']['value'],
                                 comment_text=data['snippet']['topLevelComment']['snippet']['textDisplay'],
                                 comment_like_count=data['snippet']['topLevelComment']['snippet']['likeCount'],
-                                comment_dislike_count=data['snippet']['topLevelComment']['snippet']['disLikeCount'],
+                                comment_dislike_count=data['snippet']['topLevelComment']['snippet'].get('disLikeCount', 0),
                                 comment_time=data['snippet']['topLevelComment']['snippet']['publishedAt'],
                                 reply_count=data['snippet']['totalReplyCount'])
                         )
