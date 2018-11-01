@@ -22,12 +22,23 @@ def _get_comment_header():
     return comment._fields
 
 
-def get_comments(video_id, youtube_client, next_page_token=None):
+def get_comments(video_id, youtube_client):
     try:
         return youtube_client.commentThreads().list(
             videoId=video_id,
             part='snippet,replies',
-            pageToken=next_page_token
+            maxResults=100
+        ).execute()
+    except HttpError:
+        return
+
+def get_more_comments(video_id, youtube_client, next_page_token):
+    try:
+        return youtube_client.commentThreads().list(
+            videoId=video_id,
+            part='snippet,replies',
+            pageToken=next_page_token,
+            maxResults=100
         ).execute()
     except HttpError:
         return
