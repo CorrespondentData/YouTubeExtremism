@@ -26,6 +26,7 @@ video = _namedtuple('video', ('video_id',
 def _get_video_header():
     return video._fields
 
+
 def get_more_videos(channel_uploads, youtube_client, next_page_token, max_results=None):
     """takes the id of the uploads_playlist
     in channel data"""
@@ -36,15 +37,16 @@ def get_more_videos(channel_uploads, youtube_client, next_page_token, max_result
         maxResults=50,
         pageToken=next_page_token
     ).execute()
-    
-def get_videos(channel_uploads, youtube_client, max_results=None):    
 
+
+def get_videos(channel_uploads, youtube_client, max_results=None):
     return youtube_client.playlistItems().list(
         part='snippet,contentDetails',
         playlistId=channel_uploads,
         maxResults=50
     ).execute()
-    
+
+
 def _get_video_metadata(video_id, youtube_client):
     return youtube_client.videos().list(
         part='snippet,contentDetails,statistics,topicDetails',

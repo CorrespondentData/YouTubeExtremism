@@ -31,7 +31,8 @@ def get_comments(video_id, youtube_client):
         ).execute()
     except HttpError:
         return
-    
+
+
 def get_more_comments(video_id, youtube_client, next_page_token):
     try:
         return youtube_client.commentThreads().list(
@@ -44,6 +45,13 @@ def get_more_comments(video_id, youtube_client, next_page_token):
         return
 
 
+def _get_author_channel_id(data):
+    if "authorChannelId" in data['snippet']['topLevelComment']['snippet']:
+        return data['snippet']['topLevelComment']['snippet']['authorChannelId'].get("value", 'not set')
+    else:
+        return "not set"
+
+
 def convert_to_comments(response):
     if response is None:
         return list()
@@ -54,7 +62,7 @@ def convert_to_comments(response):
                                 video_id=data['snippet']['videoId'],
                                 author_display_name=data['snippet']['topLevelComment']['snippet']['authorDisplayName'],
                                 author_channel_url=data['snippet']['topLevelComment']['snippet']['authorChannelUrl'],
-                                author_channel_id=data['snippet']['topLevelComment']['snippet']['authorChannelId']['value'],
+                                author_channel_id=_get_author_channel_id(data),
                                 comment_text=data['snippet']['topLevelComment']['snippet']['textDisplay'],
                                 comment_like_count=data['snippet']['topLevelComment']['snippet']['likeCount'],
                                 comment_dislike_count=data['snippet']['topLevelComment']['snippet'].get('disLikeCount', 0),
