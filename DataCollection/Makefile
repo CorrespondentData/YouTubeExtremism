@@ -27,11 +27,22 @@ basedependencies: guard-virtual-env clean
 dependencies: basedependencies
 	pip3 install -r requirements.txt
 
+development: dependencies
+	pip3 install -e .[dev]
+
+test: clean development
+	python3 setup.py test
+
+coverage: clean development
+	coverage run -m pytest
+	coverage report
+	coverage html
+	open htmlcov/index.html
+
 install: basedependencies
 	pip3 install .
 
-development: dependencies
-	pip3 install -e .
+
 
 
 

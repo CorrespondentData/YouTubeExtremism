@@ -1,2 +1,5 @@
 youtubecollector.egg-info
 *.vtt
+.coverage
+.pytest_cache
+htmlcov
