@@ -1,0 +1,43 @@
+{
+  "kind": "youtube#commentThreadListResponse",
+  "etag": "\"XpPGQXPnxQJhLgs6enD_n8JR4Qk/M13kILBSDXHZmf82KpKIUu78oro\"",
+  "pageInfo": {
+    "totalResults": 5,
+    "resultsPerPage": 100
+  },
+  "items": [
+    {
+      "kind": "youtube#commentThread",
+      "etag": "\"XpPGQXPnxQJhLgs6enD_n8JR4Qk/6WkG1Db9T-En4DWmNTTBdki5WTk\"",
+      "id": "The comment id that is used",
+      "snippet": {
+        "videoId": "the video id",
+        "topLevelComment": {
+          "kind": "youtube#comment",
+          "etag": "\"XpPGQXPnxQJhLgs6enD_n8JR4Qk/RUV3jLsQcA6PsDjkr3q5GkpAOmI\"",
+          "id": "UgyHUiSqijzEJ0TaL9t4AaABAg",
+          "snippet": {
+            "authorDisplayName": "Author name",
+            "authorProfileImageUrl": "https://yt3.ggpht.com/-6R8CjhXu0LY/AAAAAAAAAAI/AAAAAAAAAAA/WG9P_H8Mygg/s28-c-k-no-mo-rj-c0xffffff/photo.jpg",
+            "authorChannelUrl": "http://www.youtube.com/channel/someone",
+            "authorChannelId": {
+              "value": "someone"
+            },
+            "videoId": "a7SUq1TbgxY",
+            "textDisplay": "The text that is displayed",
+            "textOriginal": "Would be amazing to see an Austin Petersen endorsement as well. He would stand right up there with Massie, Amash, and the rest of the liberty coalition in congress.",
+            "canRate": true,
+            "viewerRating": "none",
+            "likeCount": 4,
+            "disLikeCount": 2,
+            "publishedAt": "2017-11-02T19:25:12.000Z",
+            "updatedAt": "2017-11-02T19:25:12.000Z"
+          }
+        },
+        "canReply": true,
+        "totalReplyCount": 0,
+        "isPublic": true
+      }
+    }
+  ]
+}
