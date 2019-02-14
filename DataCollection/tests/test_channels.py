@@ -1,11 +1,9 @@
 from unittest import TestCase
 
 import pandas as pd
-from googleapiclient.discovery import build
-from googleapiclient.http import HttpMockSequence
 
 from channels import get_channels, channel
-from utils_for_test import get_content_from_file
+from utils_for_test import create_test_client_with_response
 
 
 class ChannelTest(TestCase):
@@ -22,15 +20,9 @@ class ChannelTest(TestCase):
                                               'https://en.wikipedia.org/wiki/Politics'],
                     channel_branding_keywords='"Testing is fun", "More Testing"')
         ]
-        service_json = get_content_from_file("youtube_service.json")
-        full_channel_response = get_content_from_file("full_channel_response.json")
-        url = HttpMockSequence([
-            ({'status': '200'}, service_json),
-            ({'status': '200'}, full_channel_response)
-        ])
         channel_seed = pd.DataFrame([{"channel_id": "Some_ID"}])
 
-        client = build("youtube", "v3", http=url, developerKey="key")
+        client = create_test_client_with_response("full_channel_response.json", "200")
         actual = get_channels(channel_seed, client)
 
         self.assertEqual(expected, actual)
@@ -46,15 +38,10 @@ class ChannelTest(TestCase):
                     channel_topic_categories="not set",
                     channel_branding_keywords="not set")
         ]
-        service_json = get_content_from_file("youtube_service.json")
-        minimal_channel_response = get_content_from_file("nullable_fields_channel_response.json")
-        url = HttpMockSequence([
-            ({'status': '200'}, service_json),
-            ({'status': '200'}, minimal_channel_response)
-        ])
+
         channel_seed = pd.DataFrame([{"channel_id": "Some_ID"}])
 
-        client = build("youtube", "v3", http=url, developerKey="key")
+        client = create_test_client_with_response("nullable_fields_channel_response.json", "200")
         actual = get_channels(channel_seed, client)
 
         self.assertEqual(expected, actual)
