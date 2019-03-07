@@ -1,9 +1,11 @@
-import os as _os
-import glob as _glob
 import csv as _csv
+import glob as _glob
+import os as _os
+
 import webvtt as _webvtt
-from .util import is_empty_file as _is_empty_file
 import youtube_dl as _youtube_dl
+
+from .util import is_empty_file as _is_empty_file
 
 
 def _get_captions_header():

@@ -55,7 +55,7 @@ This notebook makes use of `tqdm` which generates some nice progress bars
 so you can track the progress.  
 To enable these visualisations run:
 ```commandline
-(correspondent_environment) $ jupyter nbextension enable --py widgetsnbextension
+(venv) $ jupyter nbextension enable --py widgetsnbextension
 ``` 
 
 #### Development note

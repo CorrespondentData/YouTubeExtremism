@@ -1,8 +1,8 @@
 import csv as _csv
 from collections import namedtuple as _namedtuple
 
-from util import convert_to_dictionary as _convert_to_dictionary
-from util import is_empty_file as _is_empty_file
+from .util import convert_to_dictionary as _convert_to_dictionary
+from .util import is_empty_file as _is_empty_file
 
 channel = _namedtuple("channel", ('channel_id',
                                   'channel_title',
@@ -51,13 +51,21 @@ def _convert_to_channel(response) -> channel:
                    )
 
 
+def _is_empty(response):
+    return len(response['items']) == 0
+
+
 def get_channels(channel_seeds, youtube_client):
     channels = list()
     for channel_id in channel_seeds['channel_id']:
         response = _get_channel(channel_id, youtube_client)
-        next_channel = _convert_to_channel(response)
-        channels.append(next_channel)
-        print(channel_id)
+        if _is_empty(response):
+            print(f"Channel with channel_id {channel_id} returns empty")
+            continue
+        else:
+            next_channel = _convert_to_channel(response)
+            channels.append(next_channel)
+            print(channel_id)
 
     return channels
 

@@ -1,8 +1,8 @@
 import csv as _csv
 from collections import namedtuple as _namedtuple
 
-from .util import is_empty_file as _is_empty_file
 from .util import convert_to_dictionary as _convert_to_dictionary
+from .util import is_empty_file as _is_empty_file
 
 video = _namedtuple('video', ('video_id',
                               'video_published',

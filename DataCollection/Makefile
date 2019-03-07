@@ -2,7 +2,7 @@
 
 guard-virtual-env: ## Exits if python virtual environment is not set
 	@ if [ "${VIRTUAL_ENV}" = "" ]; then \
-		echo "Virtual environment is not active. Activate with 'source env/bin/activate'"; \
+		echo "Virtual environment is not active. Activate with 'source venv/bin/activate'"; \
 		exit 1; \
 	fi
 
@@ -24,6 +24,10 @@ clean: ## Removes all build artifacts
 basedependencies: guard-virtual-env clean
 	pip3 install --upgrade pip setuptools wheel
 
+env:
+	pip3 install --upgrade virtualenv
+	virtualenv venv
+
 dependencies: basedependencies
 	pip3 install -r requirements.txt
 
@@ -39,8 +43,8 @@ coverage: clean development
 	coverage html
 	open htmlcov/index.html
 
-install: basedependencies
-	pip3 install .
+install: dependencies
+	python3 setup.py install
 
 
 

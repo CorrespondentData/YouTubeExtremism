@@ -3,8 +3,8 @@ from collections import namedtuple as _namedtuple
 
 from googleapiclient.errors import HttpError
 
-from util import convert_to_dictionary as _convert_to_dictionary
-from util import is_empty_file as _is_empty_file
+from .util import convert_to_dictionary as _convert_to_dictionary
+from .util import is_empty_file as _is_empty_file
 
 comment = _namedtuple("comment", ('video_id',
                                   'comment_id',

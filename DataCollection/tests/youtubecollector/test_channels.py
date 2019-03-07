@@ -2,8 +2,8 @@ from unittest import TestCase
 
 import pandas as pd
 
-from channels import get_channels, channel
 from utils_for_test import create_test_client_with_response
+from youtubecollector.channels import get_channels, channel
 
 
 class ChannelTest(TestCase):

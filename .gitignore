@@ -2,5 +2,8 @@ __pycache__
 .DS_Store
 .ipynb_checkpoints
 .idea
-.csv
+*.csv
 venv
+docs/
+tests/resources/recommendation.json
+tests/resources/video.json

@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from comments import convert_to_comments, comment
 from utils_for_test import read_json_from_file
+from youtubecollector.comments import convert_to_comments, comment
 
 
 class CommentTest(TestCase):
